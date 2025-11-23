@@ -1,38 +1,92 @@
-# vocal-coach-frontend
+# Vocal Coach
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository contains the frontend application for a Vocal Coach platform, designed to help users analyze and improve their vocal performance. The application allows users to record their voice, analyze pitch, and provides feedback, potentially through a pitch-matching game.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Voice Recording**: Record audio directly within the application.
+- **Pitch Analysis**: Analyze recorded audio for pitch accuracy and vocal patterns.
+- **Pitch Game**: (Potentially) An interactive game to practice and improve pitch.
+- **Results Page**: View detailed analysis and feedback on vocal performance.
+- **Audio Upload**: Upload existing audio files for analysis.
 
-## Recommended Browser Setup
+## Technologies Used
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+### Frontend (Web App)
 
-## Customize configuration
+- Vue.js (as indicated by `.vue` files)
+- Vite (for development server and build, indicated by `vite.config.js`)
+- JavaScript/ES Modules
+- `multer` (on the server-side for file uploads)
+- `express` (on the server-side for the API)
+- `cors` (on the server-side)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### Backend (Server)
 
-## Project Setup
+- Node.js
+- Express.js
+- TypeScript (as indicated by `.ts` files)
+- `multer` (for handling file uploads)
 
-```sh
-npm install
-```
+## Project Structure
 
-### Compile and Hot-Reload for Development
+- `apps/server/`: Contains the backend API developed with Node.js and Express.
+  - `src/controllers/`: Logic for handling API requests.
+  - `src/middleware/`: Express middleware.
+  - `src/routes/`: API routes (e.g., `/analyze`).
+  - `src/services/`: Business logic and data processing.
+- `apps/server/`: Contains the backend API developed with Node.js and Express.
+  - `src/controllers/`: Logic for handling API requests.
+  - `src/middleware/`: Express middleware.
+  - `src/routes/`: API routes (e.g., `/analyze`).
+  - `src/services/`: Business logic and data processing.
+  - `src/types/`: TypeScript type definitions.
+- `apps/web-app/`: Contains the Vue.js frontend application.
+  - `public/`: Static assets.
+  - `src/components/`: Reusable Vue components.
+  - `src/pages/`: Vue components for different application views (e.g., Record, PitchGame, ResultsPage).
+  - `src/router/`: Vue Router configuration.
+  - `src/utils/`: Utility functions (e.g., `UploadAudio.js`).
+- `uploads/`: Directory for storing uploaded audio files.
+- `package.json`: Defines project metadata and dependencies for the monorepo root.
+- `vite.config.js`: Configuration for Vite, used by the frontend.
+- `tsconfig.json`: TypeScript configuration.
+- `jsconfig.json`: JavaScript language service configuration.
 
-```sh
-npm run dev
-```
+## Setup and Installation
 
-### Compile and Minify for Production
+To get this project up and running on your local machine, follow these steps:
 
-```sh
-npm run build
-```
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-username/vocal-coach-frontend.git
+    cd vocal-coach-frontend
+    ```
+
+2.  **Install dependencies:**
+    This project uses a monorepo structure. Install dependencies at the root level.
+
+    ```bash
+    npm install
+    ```
+
+3.  **Start the development servers:**
+    From the root directory, run the following command to start both the backend server and the frontend application in development mode.
+
+    ```bash
+    npm run dev
+    ```
+
+    The backend server should start on `http://localhost:8080` (or the port specified in `apps/server/src/index.ts`).
+    The frontend application should now be running, typically on `http://localhost:5173` (or another port as configured by Vite).
+
+## Usage
+
+- Open your web browser and navigate to the address where the frontend is running (e.g., `http://localhost:5173`).
+- Use the "Record" page to capture your voice.
+- Explore other features like the "Pitch Game" or "Results Page" as they become available.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests.
