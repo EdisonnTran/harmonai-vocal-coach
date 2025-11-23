@@ -11,7 +11,9 @@ const audioChunks = ref<Blob[]>([])
 const audioURL = ref<string | null>(null)
 const mediaStream = ref<MediaStream | null>(null)
 const isUploading = ref(false)
-const isComparing = ref(false)
+const isSearching = ref(false)
+const songTitleQuery = ref('')
+const artistQuery = ref('')
 
 const router = useRouter()
 
@@ -59,14 +61,29 @@ const stopRecording = () => {
 const handleRecordingStop = async () => {
   const audioBlob = new Blob(audioChunks.value, { type: 'audio/webm' })
   audioURL.value = URL.createObjectURL(audioBlob)
+  const data = {}
+
+  if (isSearching && ((!artistQuery.value.trim() || !songTitleQuery.value.trim()))) {
+    data["artist"] = artistQuery.value.trim()
+    data["songTitle"] = songTitleQuery.value.trim()
+  }
 
   // Simulating upload state for UI feedback
   isUploading.value = true
   try {
-    await uploadAudio(audioBlob, router, "analyze")
+    await uploadAudio(audioBlob, router, data)
   } finally {
     isUploading.value = false
   }
+}
+
+const toggleSearch = () => {
+    // Only allow searching if not recording or uploading
+    if (!isRecording.value && !isUploading.value) {
+        isSearching.value = !isSearching.value
+        artistQuery.value = ''
+        songTitleQuery.value = '' // Clear query when toggling
+    }
 }
 
 // Cleanup
@@ -118,6 +135,37 @@ onBeforeUnmount(() => {
             <UploadCloud class="animate-bounce" :size="24" />
             <span>Processing Analysis...</span>
           </div>
+        </div>
+
+        <div v-if="isSearching" class="state-container search-container">
+          <Search :size="30" class="search-icon" />
+          <div class="search-input-group">
+            <input
+              v-model="artistQuery"
+              type="text"
+              placeholder="Artist Name..."
+              class="search-input"
+            />
+            
+            <input
+              v-model="songTitleQuery"
+              type="text"
+              placeholder="Song Title..."
+              class="search-input"
+            />
+          </div>
+          <button @click="toggleSearch" class="btn btn-link">
+            Go back to recording
+          </button>
+        </div>
+        
+                <div
+          v-if="!isRecording && !isUploading && !isSearching"
+          class="analyze-song-link"
+        >
+          <span @click="toggleSearch" class="clickable-text instruction-text">
+            Analyze with a song
+          </span>
         </div>
       </div>
     </div>
@@ -380,5 +428,79 @@ audio {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
+}
+
+/* Song Search Link */
+.analyze-song-link {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.clickable-text {
+  color: var(--accent-color);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.clickable-text:hover {
+  opacity: 0.8;
+}
+
+/* NEW: Search Bar Styles */
+.search-container {
+  /* Ensure the search bar is full width and looks good */
+  gap: 1rem;
+}
+
+.search-icon {
+  color: var(--text-secondary);
+}
+
+.search-input-group {
+    display: flex;
+    width: 100%; /* Take full width of the container */
+    gap: 10px; /* Space between the two inputs */
+}
+
+/* Updated search-input style to use flexible sizing */
+.search-input {
+    /* Use flex-grow to ensure inputs take equal space in the group */
+    flex: 1; 
+    width: auto; /* Override previous 100% width when inside the group */
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--text-secondary);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+/* Media Query: Stack inputs vertically on small screens */
+@media (max-width: 480px) {
+    .search-input-group {
+        flex-direction: column;
+        gap: 15px; /* Increase gap for stacked inputs */
+    }
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.btn-link {
+    background: none;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    font-weight: 400;
+}
+
+.btn-link:hover {
+    color: var(--text-primary);
 }
 </style>

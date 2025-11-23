@@ -1,24 +1,16 @@
-export async function uploadAudio(audioBlob, router, purpose) {
+export async function uploadAudio(audioBlob, router, data) {
 
 let endpoint;
-  switch (purpose) {
-    case "analyze":
-        endpoint = 'http://localhost:8080/analyze/audio';
-        break;
-    
-      case "compare":
-        endpoint = 'http://localhost:8080/analyze/song-comparison';
-        break;
-  } 
+const formData = new FormData();
+formData.append('audio', audioBlob, 'recording.webm')
 
-  // 1. Create a FormData object
-  const formData = new FormData()
-
-  // 2. Append the Blob. The arguments are:
-  //    a. Field Name ('audioFile'): Must match what your backend expects.
-  //    b. The File/Blob data (audioBlob).
-  //    c. File Name ('recording.webm'): A name for the file on the server.
-  formData.append('audio', audioBlob, 'recording.webm')
+if (data == {}) {
+  endpoint = 'http://localhost:8080/analyze/audio'
+} else {
+  endpoint = 'http://localhost:8080/analyze/song-comparison'
+  formData.append('artist', data["artist"])
+  formData.append('songTitle', data["songTitle"])
+}
 
   try {
     console.log('Starting upload...')
