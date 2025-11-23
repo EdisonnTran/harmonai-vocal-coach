@@ -200,7 +200,10 @@ const handleBack = () => {
             :key="index"
             class="timeline-item"
           >
-            <div class="timeline-marker"></div>
+            <div v-if="index === 0" class="timeline-marker icon-marker-wrapper">
+              <Mic2 class="icon-marker" />
+            </div>
+            <div v-else class="timeline-marker"></div>
             <div class="timeline-content">
               <div class="timeline-date">{{ item.date }}</div>
               <p class="timeline-task">{{ item.task }}</p>
@@ -532,6 +535,43 @@ h1 {
   border-radius: 50%;
   background-color: var(--accent-color);
   border: 3px solid var(--bg-dark);
+}
+
+.timeline-marker.icon-marker-wrapper {
+  width: 24px;
+  height: 24px;
+  left: -2.95rem;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-color);
+}
+
+.icon-marker {
+  color: var(--accent-color);
+  width: 16px;
+  height: 16px;
+}
+
+.icon-marker-wrapper .icon-marker {
+  color: var(--bg-dark);
+}
+
+.timeline-item:first-child .icon-marker-wrapper {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+  }
 }
 
 .timeline-date {
