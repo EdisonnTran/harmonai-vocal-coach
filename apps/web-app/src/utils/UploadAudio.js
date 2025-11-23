@@ -1,16 +1,15 @@
 export async function uploadAudio(audioBlob, router, data) {
+  let endpoint
+  const formData = new FormData()
+  formData.append('audio', audioBlob, 'recording.webm')
 
-let endpoint;
-const formData = new FormData();
-formData.append('audio', audioBlob, 'recording.webm')
-
-if (data == {}) {
-  endpoint = 'http://localhost:8080/analyze/audio'
-} else {
-  endpoint = 'http://localhost:8080/analyze/song-comparison'
-  formData.append('artist', data["artist"])
-  formData.append('songTitle', data["songTitle"])
-}
+  if (!data.artist && !data.songTitle) {
+    endpoint = 'http://localhost:8080/analyze/audio'
+  } else {
+    endpoint = 'http://localhost:8080/analyze/song-comparison'
+    formData.append('artist', data['artist'])
+    formData.append('songTitle', data['songTitle'])
+  }
 
   try {
     console.log('Starting upload...')
