@@ -40,10 +40,24 @@ const suggestedExercises = z.array(
   })
 )
 
+const timeline = z.array(
+  z.object({
+    date: z
+      .string()
+      .describe('A date in the format of month (Sept., Oct., etc.) day, year.'),
+    task: z
+      .string()
+      .describe(
+        'Detail what exercise/task the user should accomplish for this day, if any (rest days should be incorporated).'
+      ),
+  })
+)
+
 const analyzedVoiceResponseSchema = z.object({
   vocalToneAnalysis: vocalToneAnalysis,
   improvementTips: improvementTips,
   suggestedExercises: suggestedExercises,
+  timeline: timeline,
 })
 
 export const analyzedVoiceResponseJsonSchema = z.toJSONSchema(

@@ -29,15 +29,18 @@ export async function analyzeVoiceService(req: Request) {
     throw new Error('File upload failed, URI or mimeType is missing.')
   }
 
+  const currentDate = new Date().toISOString()
+
   const result = await genAI.models.generateContent({
     model: 'gemini-2.0-flash',
     contents: createUserContent([
       createPartFromUri(uploadResponse.uri, uploadResponse.mimeType),
-      'Analyze this audio file and fill in the response JSON accordingly.',
+      `Analyze this audio file and provide vocal tone analysis, improvement tips, and suggested exercises. Also, create a 7-day training timeline (today's date is ${currentDate}) for the user to follow. Fill in the response JSON accordingly.`,
     ]),
     config: {
       responseMimeType: 'application/json',
       responseJsonSchema: analyzedVoiceResponseJsonSchema,
+      maxOutputTokens: 16000,
     },
   })
 
