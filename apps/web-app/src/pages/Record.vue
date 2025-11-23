@@ -235,11 +235,18 @@ h1 {
   position: relative;
   overflow: hidden;
   text-align: center;
+  box-shadow:
+    0 2.8px 2.2px rgba(0, 0, 0, 0.1),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.15),
+    0 12.5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 4px 3px rgba(0, 0, 0, 0.15),
+    0 8px 7px rgba(0, 0, 0, 0.2),
+    0 15px 15px rgba(0, 0, 0, 0.25);
 }
 
 .state-container {
