@@ -2,7 +2,7 @@
 import { ref, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { Mic, Square, UploadCloud, PlayCircle } from 'lucide-vue-next'
-import { uploadAudio } from '@/utils/UploadAudio'
+import { uploadAudio } from '../utils/UploadAudio'
 
 // State
 const isRecording = ref(false)

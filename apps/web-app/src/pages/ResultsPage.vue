@@ -10,7 +10,7 @@ import {
   Weight,
   ArrowLeft,
 } from 'lucide-vue-next'
-import capitalizeWord from '@/utils/CapitalizeWord'
+import capitalizeWord from '../utils/CapitalizeWord'
 import { useRouter } from 'vue-router'
 
 interface ToneAnalysis {

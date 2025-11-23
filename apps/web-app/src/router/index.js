@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ResultsPage from '../frontend/components/ResultsPage.vue'
-import PitchGame from '@/frontend/components/PitchGame.vue'
-import Record from '@/frontend/components/Record.vue'
+import ResultsPage from '@/pages/ResultsPage.vue'
+import PitchGame from '@/pages/PitchGame.vue'
+import Record from '@/pages/Record.vue'
 
 const routes = [
   {
