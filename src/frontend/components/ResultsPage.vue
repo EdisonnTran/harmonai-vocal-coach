@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import {
   Activity,
   Mic2,
@@ -11,8 +11,8 @@ import {
   ArrowLeft,
 } from 'lucide-vue-next'
 import capitalizeWord from '@/utils/CapitalizeWord'
+import { useRouter } from 'vue-router'
 
-// 1. TypeScript Interfaces
 interface ToneAnalysis {
   timbre: string
   texture: string
@@ -35,40 +35,43 @@ interface AnalysisResult {
   suggestedExercises: Exercise[]
 }
 
-// 3. Get data from history state, with a fallback to MOCK_DATA
-// Note: In a real browser reload, history.state might be null, so we optional chain just in case.
-const data = computed(
-  () => ((history.state && history.state.results) || {}) as AnalysisResult
-)
+const rawState = history.state || {}
+const data = computed(() => rawState.results as AnalysisResult | undefined)
+const audioURL = computed(() => rawState.url as string | undefined)
+const router = useRouter()
 
-const audioURL = computed(() => history.state.url)
+onMounted(() => {
+  console.log(data, audioURL)
+  if (!data.value || !audioURL.value) {
+    console.warn('No analysis data found. Redirecting to recorder...')
+    router.replace('/')
+  }
+})
 
-// 4. Helper to organize the Tone Cards for the template
 const toneCards = computed(() => [
   {
     label: 'Timbre',
-    value: data.value.vocalToneAnalysis.timbre || '',
+    value: data.value?.vocalToneAnalysis?.timbre || '',
     desc: 'Your unique tone color',
     icon: Mic2,
     colorClass: 'text-green-600',
   },
   {
     label: 'Texture',
-    value: data.value.vocalToneAnalysis.texture || '',
+    value: data.value?.vocalToneAnalysis?.texture || '',
     desc: 'Surface quality of sound',
     icon: Wind,
     colorClass: 'text-green-500',
   },
   {
     label: 'Vocal Weight',
-    value: data.value.vocalToneAnalysis.vocalWeight || '',
+    value: data.value?.vocalToneAnalysis?.vocalWeight || '',
     desc: 'Perceived heaviness',
     icon: Weight,
     colorClass: 'text-green-400',
   },
 ])
 
-// Handle navigation back
 const handleBack = () => {
   if (history.length > 1) {
     history.back()
@@ -87,7 +90,7 @@ const handleBack = () => {
       </a>
     </nav>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" v-if="data">
       <header>
         <div class="waveform-container">
           <div
