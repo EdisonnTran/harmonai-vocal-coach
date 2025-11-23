@@ -1,3 +1,7 @@
+<script setup>
+import Record from "@/frontend/components/Record.vue";
+</script>
+
 <script>
 export default {
   name: 'VocalCoachUI',
@@ -9,21 +13,6 @@ export default {
       analysis: null, // To store results from the backend
     };
   },
-  methods: {
-    startRecording() {
-      this.appState = 'recording';
-      console.log('Recording started...');
-      // Placeholder for recording logic.
-      // After a few seconds, we'll simulate completion.
-      setTimeout(this.finishRecording, 5000);
-    },
-    finishRecording() {
-      this.appState = 'analyzing';
-      console.log('Recording finished. Analyzing...');
-      // In a real app, you would send the recording to your backend here.
-      // For now, we'll simulate an API call.
-      setTimeout(this.showResults, 3000);
-    },
     showResults() {
       // Mock analysis data
       this.analysis = {
@@ -48,7 +37,6 @@ export default {
       this.appState = 'idle';
       this.analysis = null;
     }
-  },
 };
 </script>
 
@@ -60,47 +48,7 @@ export default {
     </header>
 
     <main>
-      <!-- Idle State: Ready to record -->
-      <div v-if="appState === 'idle'" class="card">
-        <h2>Ready to Analyze Your Voice?</h2>
-        <p>Click the button below to start recording. Sing a scale or a short piece of a song.</p>
-        <button @click="startRecording">Start Recording</button>
-      </div>
-
-      <!-- Recording State -->
-      <div v-if="appState === 'recording'" class="card recording-indicator">
-        <h2>Recording...</h2>
-        <div class="pulsing-dot"></div>
-        <p>Sing clearly into your microphone.</p>
-      </div>
-
-      <!-- Analyzing State -->
-      <div v-if="appState === 'analyzing'" class="card">
-        <h2>Analyzing Your Voice...</h2>
-        <p>Our AI is working its magic. This will just take a moment.</p>
-      </div>
-
-      <!-- Results State -->
-      <div v-if="appState === 'results' && analysis" class="results-container">
-        <h2>Your Vocal Analysis</h2>
-        <div class="card">
-          <h3>Vocal Range: {{ analysis.vocalRange.type }}</h3>
-          <p>Your estimated range is from <strong>{{ analysis.vocalRange.low }}</strong> to <strong>{{ analysis.vocalRange.high }}</strong>.</p>
-        </div>
-        <div class="card">
-          <h3>Tone & Timbre</h3>
-          <p>Your tone is described as: <strong>{{ analysis.tone.join(', ') }}</strong>.</p>
-        </div>
-        <div class="card">
-          <h3>Areas for Improvement</h3>
-          <ul>
-            <li v-for="tip in analysis.improvements" :key="tip.id">
-              <strong>{{ tip.title }}:</strong> {{ tip.description }}
-            </li>
-          </ul>
-        </div>
-        <button @click="resetApp">Analyze Again</button>
-      </div>
+      <Record />
     </main>
   </div>
 </template>
