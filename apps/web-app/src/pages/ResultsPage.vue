@@ -146,6 +146,11 @@ const handleBack = () => {
           <p class="audio-label">Your Recording:</p>
           <audio :src="audioURL" controls></audio>
         </div>
+        <div style="width: 100%; display: flex; justify-content: center">
+          <button @click="router.push('/exercise')" class="exercise-button">
+            Practice with our interactive game!
+          </button>
+        </div>
         <h2 class="section-title">
           <Activity class="section-icon" />
           {{
@@ -714,5 +719,28 @@ h1 {
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
+}
+
+.exercise-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-color);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+  margin-top: 1.5rem;
+}
+
+.exercise-button:hover {
+  background-color: #6d28d9;
+  transform: translateY(-2px);
 }
 </style>
