@@ -62,10 +62,10 @@ const handleRecordingStop = async () => {
   const audioBlob = new Blob(audioChunks.value, { type: 'audio/webm' })
   audioURL.value = URL.createObjectURL(audioBlob)
   const data = {}
-
-  if (isSearching && ((!artistQuery.value.trim() || !songTitleQuery.value.trim()))) {
-    data["artist"] = artistQuery.value.trim()
-    data["songTitle"] = songTitleQuery.value.trim()
+  
+  if (isSearching.value && artistQuery.value.trim() && songTitleQuery.value.trim()) {
+    data['artist'] = artistQuery.value.trim()
+    data['songTitle'] = songTitleQuery.value.trim()
   }
 
   // Simulating upload state for UI feedback
