@@ -1,5 +1,5 @@
 <template>
-  <div id="voice-pitch-game">
+  <div id="melody-matcher-game" class="vocal-game-container">
     <div class="game-container" :style="{ height: gameHeight + 'px'}">
       <div 
         class="bird" 
@@ -25,9 +25,9 @@
     
     <div class="control-panel">
       <h3>Pitch Control Status</h3>
-      <p>Status: **{{ audioStatus }}**</p>
-      <p>Current Pitch: **{{ currentPitch.toFixed(2) }} Hz**</p>
-      <p>Game Height: **{{ birdY.toFixed(0) }}** (Min/Max: {{ MIN_PITCH }}Hz / {{ MAX_PITCH }}Hz)</p>
+      <p>Status: {{ audioStatus }}</p>
+      <p>Current Pitch: {{ currentPitch.toFixed(2) }} Hz</p>
+      <p>Game Height: {{ birdY.toFixed(0) }} (Min/Max: {{ MIN_PITCH }}Hz / {{ MAX_PITCH }}Hz)</p>
       <button @click="isGameOver ? startGame() : stopGame()">
         {{ isGameOver ? 'Start Game' : 'Stop Game' }}
       </button>
@@ -259,16 +259,156 @@ export default {
 </script>
 
 <style scoped>
+/* --- THEME VARIABLES (Inherited from reference) --- */
+.vocal-game-container {
+  --bg-dark: #0f172a;
+  --card-bg: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #8b5cf6;
+  --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  --danger: #ef4444;
+  --success: #10b981;
 
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  
+  /* Apply global background and text color to the component's root */
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Match H2 style to the H1 gradient style */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+/* --- Game Container (Replaces .card) --- */
 .game-container {
   position: relative;
   width: 500px;
-  background-image: url('@/public/game_bg.jpg');
-  background-size: cover;
-  background-color: #70c5ce;
   height: 480px;
+  /* Apply dark card styling */
+  /* background-color: var(--card-bg); */
+  /* border: 1px solid rgba(255, 255, 255, 0.05); */
+  /* border-radius: 16px; */
   overflow: hidden;
   margin: 20px auto;
+  user-select: none;
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); */
+  /* Added padding inside for the game area, though note items will cover it */
+}
+
+/* Pitch Grid/Staff Lines */
+.pitch-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Darken the staff background slightly for better contrast */
+  background-color: rgba(255, 255, 255, 0.01); 
+}
+
+.staff-line {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background-color: var(--text-secondary); /* Use secondary text color for lines */
+  opacity: 0.3; /* Make them subtle */
+}
+
+/* --- User Pitch Cursor --- */
+.user-cursor {
+  position: absolute;
+  left: 100px; 
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 24px;
+  color: var(--accent-color); /* Use accent color for the microphone icon */
+  z-index: 10;
+  text-shadow: 0 0 8px rgba(139, 92, 246, 0.5); /* Glow effect */
+  transition: top 0.05s linear; 
+}
+
+
+/* --- Feedback & Controls --- */
+.feedback-display {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-bg);
+  padding: 8px 16px;
+  border-radius: 50px; /* Pill shape */
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-panel {
+  text-align: center;
+  margin-top: 2rem;
+  /* Applying the .card style's padding/background here for the controls */
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.control-panel p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* Apply button styles from the theme */
+.control-panel button {
+  /* .btn-primary styles */
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.control-panel button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+.game-container {
+  position: relative;
+  width: 880px;
+  background-image: url('@/public/game_bg.jpg');
+  background-size: contain;
+  /* background-color: #70c5ce; */
+  background-repeat: no-repeat;
+  height: 100%;
+
+  overflow: hidden;
+  /* margin: 20px auto; */
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); */
+
 }
 
 .bird {
@@ -312,10 +452,5 @@ export default {
 
 .pipes_img {
   width:100%;
-}
-
-.control-panel {
-  text-align: center;
-  margin-top: 20px;
 }
 </style>
